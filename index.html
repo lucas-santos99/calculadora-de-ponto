@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Horário de Ponto</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS (Opcional) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Calculadora de Horário de Ponto</h1>
+    
+    <!-- Formulário para horários da manhã -->
+    <form id="manhaForm" class="mt-4">
+      <div class="row mb-3">
+        <div class="col">
+          <label for="entradaManha" class="form-label">Hora de Entrada (Manhã)</label>
+          <input type="time" id="entradaManha" class="form-control" required>
+        </div>
+        <div class="col">
+          <label for="saidaManha" class="form-label">Hora de Saída (Manhã)</label>
+          <input type="time" id="saidaManha" class="form-control" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Calcular Tempo Restante</button>
+    </form>
+
+    <!-- Exibe o tempo restante após os horários da manhã -->
+    <div class="mt-4">
+      <h3 id="tempoRestante" class="text-center"></h3>
+    </div>
+
+    <!-- Formulário para o horário da tarde -->
+    <form id="tardeForm" class="mt-4" style="display: none;">
+      <div class="row mb-3">
+        <div class="col">
+          <label for="entradaTarde" class="form-label">Hora de Entrada (Tarde)</label>
+          <input type="time" id="entradaTarde" class="form-control" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Calcular Saída</button>
+    </form>
+
+    <!-- Exibe o resultado final com o horário de saída da tarde -->
+    <div class="mt-4">
+      <h3 id="resultado" class="text-center"></h3>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    let horasRestantesGlobal;
+    let minutosRestantesGlobal;
+
+    function calcularTempoTrabalhado(horaEntrada, horaSaida) {
+      const [horaEnt, minEnt] = horaEntrada.split(':').map(Number);
+      const [horaSai, minSai] = horaSaida.split(':').map(Number);
+
+      let horasTrabalhadas = horaSai - horaEnt;
+      let minutosTrabalhados = minSai - minEnt;
+
+      if (minutosTrabalhados < 0) {
+        minutosTrabalhados += 60;
+        horasTrabalhadas--;
+      }
+
+      return { horas: horasTrabalhadas, minutos: minutosTrabalhados };
+    }
+
+    function tempoRestanteParaCompletarJornada(horasManha, minutosManha) {
+      const jornadaHoras = 7;
+      const jornadaMinutos = 35;
+
+      let horasRestantes = jornadaHoras - horasManha;
+      let minutosRestantes = jornadaMinutos - minutosManha;
+
+      if (minutosRestantes < 0) {
+        minutosRestantes += 60;
+        horasRestantes--;
+      }
+
+      return { horas: horasRestantes, minutos: minutosRestantes };
+    }
+
+    function calcularSaidaTarde(horaEntradaTarde, horasRestantes, minutosRestantes) {
+      const [horaEnt, minEnt] = horaEntradaTarde.split(':').map(Number);
+
+      let horaSaida = horaEnt + horasRestantes;
+      let minutoSaida = minEnt + minutosRestantes;
+
+      if (minutoSaida >= 60) {
+        minutoSaida -= 60;
+        horaSaida++;
+      }
+
+      return `${horaSaida.toString().padStart(2, '0')}:${minutoSaida.toString().padStart(2, '0')}`;
+    }
+
+    // Evento para calcular o tempo restante após os horários da manhã
+    document.getElementById('manhaForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const horaEntradaManha = document.getElementById('entradaManha').value;
+      const horaSaidaManha = document.getElementById('saidaManha').value;
+
+      const tempoManha = calcularTempoTrabalhado(horaEntradaManha, horaSaidaManha);
+      const tempoRestante = tempoRestanteParaCompletarJornada(tempoManha.horas, tempoManha.minutos);
+
+      // Armazena o tempo restante globalmente para uso posterior
+      horasRestantesGlobal = tempoRestante.horas;
+      minutosRestantesGlobal = tempoRestante.minutos;
+
+      // Mostra o tempo restante
+      document.getElementById('tempoRestante').textContent = 
+        `Faltam ${horasRestantesGlobal} horas e ${minutosRestantesGlobal} minutos para completar a jornada.`;
+
+      // Exibe o formulário para entrada da tarde
+      document.getElementById('tardeForm').style.display = 'block';
+    });
+
+    // Evento para calcular o horário de saída da tarde
+    document.getElementById('tardeForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const horaEntradaTarde = document.getElementById('entradaTarde').value;
+      const horaSaidaTarde = calcularSaidaTarde(horaEntradaTarde, horasRestantesGlobal, minutosRestantesGlobal);
+
+      // Mostra o horário de saída da tarde
+      document.getElementById('resultado').textContent = `Você precisa sair às: ${horaSaidaTarde}`;
+    });
+  </script>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
