@@ -10,9 +10,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="overlay"></div>
   <div class="container mt-5">
-    <h1 class="text-center">Calculadora de Horário de Ponto - Amanda Lopes</h1>
+    <h1 class="text-center">Horário de Ponto - Peruzzo</h1>
     
+    <!-- Espaço para foto do funcionário -->
+    <div class="text-center">
+      <img id="fotoFuncionario" src="https://i.postimg.cc/Tw6ZRn21/amanda.jpg" alt="Foto do Funcionário" class="img-fluid rounded-circle" style="max-width: 200px;">
+      <div class="nomeFuncionario">Amanda Lopes</div> <!-- Nome estilizado -->
+    </div>
+
+
+
     <!-- Formulário para horários da manhã -->
     <form id="manhaForm" class="mt-4">
       <div class="row mb-3">
@@ -25,12 +34,12 @@
           <input type="time" id="saidaManha" class="form-control" required>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Calcular Tempo Restante</button>
+      <button type="submit" class="btn btn-custom">Calcular Tempo Restante</button>
     </form>
 
     <!-- Exibe o tempo restante após os horários da manhã -->
     <div class="mt-4">
-      <h3 id="tempoRestante" class="text-center"></h3>
+      <h3 id="tempoRestante" class="text-center aviso"></h3>
     </div>
 
     <!-- Formulário para o horário da tarde -->
@@ -41,14 +50,24 @@
           <input type="time" id="entradaTarde" class="form-control" required>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Calcular Saída</button>
+      <button type="submit" class="btn btn-custom">Calcular Saída</button>
     </form>
 
     <!-- Exibe o resultado final com o horário de saída da tarde -->
     <div class="mt-4">
-      <h3 id="resultado" class="text-center"></h3>
+      <h3 id="resultado" class="text-center aviso"></h3>
     </div>
+
+    <!-- Avisos -->
+    <div id="avisos" class="mt-4 aviso text-center"></div>
+    <div id="avisoHorarioLimite" class="mt-4 aviso text-center"></div>
   </div>
+ 
+    <!-- Criador por: -->
+  <div class="footer">
+    <p>Desenvolvido por Lucas dos Santos</p> <!-- Informação de desenvolvimento -->
+  </div>
+</div>
 
   <!-- JavaScript -->
   <script>
@@ -85,6 +104,51 @@
       return { horas: horasRestantes, minutos: minutosRestantes };
     }
 
+    function calcularHorarioLimiteEntradaManha(horaEntradaManha) {
+      const [horaEnt, minEnt] = horaEntradaManha.split(':').map(Number);
+
+      // Adiciona 6 horas ao horário de entrada para definir o limite de saída da manhã
+      let horaLimiteSaida = horaEnt + 6;
+      let minutoLimiteSaida = minEnt;
+
+      if (minutoLimiteSaida >= 60) {
+        minutoLimiteSaida -= 60;
+        horaLimiteSaida++;
+      }
+
+      return `${horaLimiteSaida.toString().padStart(2, '0')}:${minutoLimiteSaida.toString().padStart(2, '0')}`;
+    }
+
+    function calcularHorarioMinimoEntradaTarde(horaSaidaManha) {
+      const [horaSai, minSai] = horaSaidaManha.split(':').map(Number);
+
+      // Adiciona 1h10min ao horário de saída da manhã para determinar o mínimo de entrada da tarde
+      let horaMinimaEntradaTarde = horaSai + 1;
+      let minutoMinimoEntradaTarde = minSai + 10;
+
+      if (minutoMinimoEntradaTarde >= 60) {
+        minutoMinimoEntradaTarde -= 60;
+        horaMinimaEntradaTarde++;
+      }
+
+      return `${horaMinimaEntradaTarde.toString().padStart(2, '0')}:${minutoMinimoEntradaTarde.toString().padStart(2, '0')}`;
+    }
+
+    function calcularHorarioMaximoEntradaTarde(horaSaidaManha) {
+      const [horaSai, minSai] = horaSaidaManha.split(':').map(Number);
+
+      // Adiciona 3 horas ao horário de saída da manhã para determinar o máximo de entrada da tarde
+      let horaMaximaEntradaTarde = horaSai + 3;
+      let minutoMaximoEntradaTarde = minSai;
+
+      if (minutoMaximoEntradaTarde >= 60) {
+        minutoMaximoEntradaTarde -= 60;
+        horaMaximaEntradaTarde++;
+      }
+
+      return `${horaMaximaEntradaTarde.toString().padStart(2, '0')}:${minutoMaximoEntradaTarde.toString().padStart(2, '0')}`;
+    }
+
     function calcularSaidaTarde(horaEntradaTarde, horasRestantes, minutosRestantes) {
       const [horaEnt, minEnt] = horaEntradaTarde.split(':').map(Number);
 
@@ -99,12 +163,22 @@
       return `${horaSaida.toString().padStart(2, '0')}:${minutoSaida.toString().padStart(2, '0')}`;
     }
 
+    // Exibe o horário limite de saída da manhã quando o horário de entrada é selecionado
+    document.getElementById('entradaManha').addEventListener('change', function() {
+      const horaEntradaManha = document.getElementById('entradaManha').value;
+      const horarioLimite = calcularHorarioLimiteEntradaManha(horaEntradaManha);
+
+      // Exibe o aviso com o horário limite de saída
+      document.getElementById('avisoHorarioLimite').textContent = 
+        `O HORÁRIO LIMITE PARA BATER O PONTO DE SAÍDA DA MANHÃ É ATÉ ${horarioLimite}.`;
+    });
+
     // Evento para calcular o tempo restante após os horários da manhã
     document.getElementById('manhaForm').addEventListener('submit', function(event) {
       event.preventDefault();
 
       const horaEntradaManha = document.getElementById('entradaManha').value;
-      const horaSaidaManha = document.getElementById('saidaManha').value;
+      let horaSaidaManha = document.getElementById('saidaManha').value;
 
       const tempoManha = calcularTempoTrabalhado(horaEntradaManha, horaSaidaManha);
       const tempoRestante = tempoRestanteParaCompletarJornada(tempoManha.horas, tempoManha.minutos);
@@ -113,9 +187,19 @@
       horasRestantesGlobal = tempoRestante.horas;
       minutosRestantesGlobal = tempoRestante.minutos;
 
+      // Remove o aviso do horário limite de saída da manhã
+      document.getElementById('avisoHorarioLimite').textContent = '';
+
       // Mostra o tempo restante
       document.getElementById('tempoRestante').textContent = 
-        `Faltam ${horasRestantesGlobal} horas e ${minutosRestantesGlobal} minutos para completar a jornada.`;
+        `Faltam ${horasRestantesGlobal} hora(s) e ${minutosRestantesGlobal} minuto(s) para completar o dia.`;
+
+      const horarioMinimoEntradaTarde = calcularHorarioMinimoEntradaTarde(horaSaidaManha);
+      const horarioMaximoEntradaTarde = calcularHorarioMaximoEntradaTarde(horaSaidaManha);
+
+      // Exibe o aviso sobre o intervalo
+      document.getElementById('avisos').textContent = 
+        `VOCÊ DEVE VOLTAR PARA BATER O PONTO DA TARDE ENTRE ${horarioMinimoEntradaTarde} E ${horarioMaximoEntradaTarde}.`;
 
       // Exibe o formulário para entrada da tarde
       document.getElementById('tardeForm').style.display = 'block';
@@ -128,8 +212,11 @@
       const horaEntradaTarde = document.getElementById('entradaTarde').value;
       const horaSaidaTarde = calcularSaidaTarde(horaEntradaTarde, horasRestantesGlobal, minutosRestantesGlobal);
 
+      // Remove o aviso sobre o intervalo ao calcular a saída
+      document.getElementById('avisos').textContent = '';
+
       // Mostra o horário de saída da tarde
-      document.getElementById('resultado').textContent = `Você precisa sair às: ${horaSaidaTarde}`;
+      document.getElementById('resultado').textContent = `O HORÁRIO DE SAÍDA É ÀS: ${horaSaidaTarde}`;
     });
   </script>
 

@@ -1,8 +1,81 @@
 h1 {
-    color: #007bff;
+    color: #f10700;
 }
-  
+
+h3 {
+    color: #f10700;
+}
+
+
 #resultado {
     font-size: 1.5rem;
-    color: #28a745;
+    color: #13813d;
+    text-decoration: underline;
+    
 }
+
+.btn-custom {
+    background-color: #f10700; /* Cor de fu ndo */
+    color: white; /* Cor do texto */
+    border: none; /* Remove a borda padrão */
+}
+
+.btn-custom:hover {
+    background-color: #c00600; /* Cor de fundo ao passar o mouse */
+}
+
+
+
+body {
+    background-image: url('https://superhiper.com.br/devlop/wp-content/uploads/2024/08/Peruzzo.jpg'); /* Substitua pelo caminho da sua imagem */
+    background-size: cover; /* Cobre toda a área da tela */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    min-height: 100vh; /* Garante que o fundo cubra a altura mínima da tela */
+    margin: 0; /* Remover margens do body */
+}
+
+.overlay {
+    position: fixed; /* Fixa a sobreposição para cobrir toda a tela */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Cor preta com 50% de opacidade */
+    z-index: 1; /* Fica atrás do conteúdo principal */
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8); /* Cor de fundo semi-transparente para melhor legibilidade */
+    padding: 20px; /* Espaçamento interno */
+    border-radius: 10px; /* Bordas arredondadas */
+    position: relative; /* Para garantir que o conteúdo fique acima da sobreposição */
+    z-index: 2; /* Para que o conteúdo apareça acima da sobreposição */
+}
+
+#fotoFuncionario {
+    border: 2px solid #f10700; /* Borda azul */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9); /* Sombra */
+    margin-bottom: 20px; /* Espaço abaixo da imagem */
+}
+
+.aviso {
+    color: green;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+  }
+
+  .nomeFuncionario {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f10700; /* Cor azul do Bootstrap */
+    margin-top: 10px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 00px;
+    font-size: 0.9rem;
+    color: #ffffff; /* Cor cinza do Bootstrap */
+  }
