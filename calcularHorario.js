@@ -14,9 +14,9 @@ function calcularTempoTrabalhado(horaEntrada, horaSaida) {
       horas: horasTrabalhadas,
       minutos: minutosTrabalhados
     };
-  }
+}
   
-  function tempoRestanteParaCompletarJornada(horasManha, minutosManha) {
+function tempoRestanteParaCompletarJornada(horasManha, minutosManha) {
     const jornadaHoras = 7;
     const jornadaMinutos = 35;
   
@@ -32,9 +32,9 @@ function calcularTempoTrabalhado(horaEntrada, horaSaida) {
       horas: horasRestantes,
       minutos: minutosRestantes
     };
-  }
+}
   
-  function calcularSaidaTarde(horaEntradaTarde, horasRestantes, minutosRestantes) {
+function calcularSaidaTarde(horaEntradaTarde, horasRestantes, minutosRestantes) {
     const [horaEnt, minEnt] = horaEntradaTarde.split(':').map(Number);
   
     let horaSaida = horaEnt + horasRestantes;
@@ -46,21 +46,20 @@ function calcularTempoTrabalhado(horaEntrada, horaSaida) {
     }
   
     return `${horaSaida.toString().padStart(2, '0')}:${minutoSaida.toString().padStart(2, '0')}`;
-  }
+}
   
-  // Exemplo de uso:
-  const horaEntradaManha = "08:00";  // Hora de entrada na manhã
-  const horaSaidaManha = "12:00";    // Hora de saída na manhã
-  const horaEntradaTarde = "13:00";  // Hora de entrada na tarde
+// Exemplo de uso:
+const horaEntradaManha = "08:00";  // Hora de entrada na manhã
+const horaSaidaManha = "12:00";    // Hora de saída na manhã
+const horaEntradaTarde = "13:00";  // Hora de entrada na tarde
   
-  // Calcula o tempo trabalhado de manhã
-  const tempoManha = calcularTempoTrabalhado(horaEntradaManha, horaSaidaManha);
+// Calcula o tempo trabalhado de manhã
+const tempoManha = calcularTempoTrabalhado(horaEntradaManha, horaSaidaManha);
   
-  // Calcula o tempo restante que precisa ser trabalhado à tarde
-  const tempoRestante = tempoRestanteParaCompletarJornada(tempoManha.horas, tempoManha.minutos);
+// Calcula o tempo restante que precisa ser trabalhado à tarde
+const tempoRestante = tempoRestanteParaCompletarJornada(tempoManha.horas, tempoManha.minutos);
   
-  // Calcula o horário de saída da tarde com base na entrada e no tempo restante
-  const horaSaidaTarde = calcularSaidaTarde(horaEntradaTarde, tempoRestante.horas, tempoRestante.minutos);
+// Calcula o horário de saída da tarde com base na entrada e no tempo restante
+const horaSaidaTarde = calcularSaidaTarde(horaEntradaTarde, tempoRestante.horas, tempoRestante.minutos);
   
-  console.log(`Você precisa sair às: ${horaSaidaTarde}`);  // Exemplo de saída: Você precisa sair às: 16:35
-  
+console.log(`Você precisa sair às: ${horaSaidaTarde}`);  // Exemplo de saída: Você precisa sair às: 16:35
