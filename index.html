@@ -20,13 +20,11 @@
       <div class="nomeFuncionario">Amanda Lopes</div> <!-- Nome estilizado -->
     </div>
 
-
-
     <!-- Formulário para horários da manhã -->
     <form id="manhaForm" class="mt-4">
       <div class="row mb-3">
         <div class="col">
-          <label for="entradaManha" class="form-label">Hora de Entrada - (Manhã)</label>
+          <label for="entradaManha" class="form-label" >Hora de Entrada - (Manhã)</label>
           <input type="time" id="entradaManha" class="form-control" required>
         </div>
         <div class="col">
@@ -62,11 +60,16 @@
     <div id="avisos" class="mt-4 aviso text-center"></div>
     <div id="avisoHorarioLimite" class="mt-4 aviso text-center"></div>
   </div>
- 
+
+  <div>
+  <ul id="listaHorarios" class="list-group"></ul>
+ </div>
+
     <!-- Criador por: -->
   <div class="footer">
     <p>Desenvolvido por Lucas dos Santos</p> <!-- Informação de desenvolvimento -->
   </div>
+  
 </div>
 
   <!-- JavaScript -->
@@ -90,8 +93,8 @@
     }
 
     function tempoRestanteParaCompletarJornada(horasManha, minutosManha) {
-      const jornadaHoras = 7;
-      const jornadaMinutos = 35;
+      const jornadaHoras = 8;
+      const jornadaMinutos = 0;
 
       let horasRestantes = jornadaHoras - horasManha;
       let minutosRestantes = jornadaMinutos - minutosManha;
